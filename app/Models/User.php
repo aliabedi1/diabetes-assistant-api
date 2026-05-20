@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -28,8 +29,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon|null             $updated_at
  * @property string|null             $deleted_at
  *
- * @property Collection|GlucoseLog[] $glucoseLogs
- * @property Collection|MedicalLog[] $medicalLogs
+ * @property Collection|GlucoseLog[] $glucose_logs
+ * @property Collection|MedicalLog[] $medical_logs
  * @property Collection|Role[]       $roles
  *
  * @package App\Models
@@ -37,11 +38,11 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use SoftDeletes;
-    use Notifiable;
     use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
 
     protected $table = 'users';
-    public static $snakeAttributes = false;
 
     protected $casts = [
         'email_verified_at' => 'datetime'
@@ -63,13 +64,13 @@ class User extends Authenticatable
     ];
 
 
-    public function glucoseLogs()
+    public function glucose_logs()
     {
         return $this->hasMany(GlucoseLog::class);
     }
 
 
-    public function medicalLogs()
+    public function medical_logs()
     {
         return $this->hasMany(MedicalLog::class);
     }

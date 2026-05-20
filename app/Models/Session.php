@@ -25,7 +25,6 @@ class Session extends Model
 	protected $table = 'sessions';
 	public $incrementing = false;
 	public $timestamps = false;
-	public static $snakeAttributes = false;
 
 	protected $casts = [
 		'user_id' => 'int',

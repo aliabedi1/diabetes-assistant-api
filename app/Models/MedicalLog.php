@@ -31,7 +31,6 @@ class MedicalLog extends Model
 {
 	use SoftDeletes;
 	protected $table = 'medical_logs';
-	public static $snakeAttributes = false;
 
 	protected $casts = [
 		'user_id' => 'int',

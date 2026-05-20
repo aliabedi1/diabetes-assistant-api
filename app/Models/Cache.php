@@ -23,7 +23,6 @@ class Cache extends Model
 	protected $primaryKey = 'key';
 	public $incrementing = false;
 	public $timestamps = false;
-	public static $snakeAttributes = false;
 
 	protected $casts = [
 		'expiration' => 'int'

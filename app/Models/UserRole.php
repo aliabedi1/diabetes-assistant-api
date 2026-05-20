@@ -29,7 +29,6 @@ class UserRole extends Model
 {
 	use SoftDeletes;
 	protected $table = 'user_roles';
-	public static $snakeAttributes = false;
 
 	protected $casts = [
 		'user_id' => 'int',

@@ -29,7 +29,6 @@ class JobBatch extends Model
 	protected $table = 'job_batches';
 	public $incrementing = false;
 	public $timestamps = false;
-	public static $snakeAttributes = false;
 
 	protected $casts = [
 		'total_jobs' => 'int',

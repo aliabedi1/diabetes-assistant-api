@@ -25,7 +25,6 @@ class Job extends Model
 {
 	protected $table = 'jobs';
 	public $timestamps = false;
-	public static $snakeAttributes = false;
 
 	protected $casts = [
 		'attempts' => 'int',

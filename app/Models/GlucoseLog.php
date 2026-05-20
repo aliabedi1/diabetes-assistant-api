@@ -30,7 +30,6 @@ class GlucoseLog extends Model
 {
 	use SoftDeletes;
 	protected $table = 'glucose_logs';
-	public static $snakeAttributes = false;
 
 	protected $casts = [
 		'user_id' => 'int',

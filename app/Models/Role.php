@@ -29,7 +29,6 @@ class Role extends Model
 {
 	use SoftDeletes;
 	protected $table = 'roles';
-	public static $snakeAttributes = false;
 
 	protected $fillable = [
 		'name',
