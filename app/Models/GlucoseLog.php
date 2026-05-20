@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @package App\Models
  */
-class GlucoseLog extends Model
+class GlucoseLog extends BaseModel
 {
 	use SoftDeletes;
 	protected $table = 'glucose_logs';

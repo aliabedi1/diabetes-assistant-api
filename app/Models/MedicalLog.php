@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @package App\Models
  */
-class MedicalLog extends Model
+class MedicalLog extends BaseModel
 {
 	use SoftDeletes;
 	protected $table = 'medical_logs';

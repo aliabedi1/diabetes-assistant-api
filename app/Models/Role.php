@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @package App\Models
  */
-class Role extends Model
+class Role extends BaseModel
 {
 	use SoftDeletes;
 	protected $table = 'roles';
