@@ -14,6 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         //
     })
+    ->withMiddleware(function ($middleware) {
+        $middleware->statefulApi();
+
+        $middleware->validateCsrfTokens(except: [
+            //
+        ]);
+    })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
