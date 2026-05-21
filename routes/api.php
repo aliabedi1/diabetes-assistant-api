@@ -1,8 +1,43 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\Auth\AuthController;
+use App\Http\Controllers\Api\V1\Glucose\GlucoseLogController;
+use App\Http\Controllers\Api\V1\Injection\InjectionLogController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
+Route::group([
+    'as'     => 'auth.',
+    'prefix' => 'auth',
+], function ($router) {
+    $router->post('/register', [AuthController::class, 'register'])->name('register');
+    $router->post('/login', [AuthController::class, 'login'])->name('login');
+});
+
+
+Route::group([
+    'middleware' => [
+        'auth:sanctum'
+    ]
+], function ($router) {
+    Route::group([
+        'as'     => 'auth.',
+        'prefix' => 'auth',
+    ], function ($router) {
+        $router->get('/me', [AuthController::class, 'me'])->name('me');
+        $router->post('/logout', [AuthController::class, 'logout'])->name('logout');
+    });
+
+    $router->group(['as' => 'glucose.', 'prefix' => 'glucose'], function ($router) {
+        $router->group(['as' => 'logs.', 'prefix' => 'logs'], function ($router) {
+            $router->get('/', [GlucoseLogController::class, 'index'])->name('index');
+            $router->post('/', [GlucoseLogController::class, 'store'])->name('store');
+        });
+    });
+
+    $router->group(['as' => 'injection.', 'prefix' => 'injection'], function ($router) {
+        $router->group(['as' => 'logs.', 'prefix' => 'logs'], function ($router) {
+            $router->get('/', [InjectionLogController::class, 'index'])->name('index');
+            $router->post('/', [InjectionLogController::class, 'store'])->name('store');
+        });
+    });
 });
