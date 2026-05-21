@@ -4,31 +4,38 @@ namespace App\Http\Controllers\Api\V1\Medical;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Medical\MedicalLog\MedicalLogIndexRequest;
+use App\Http\Requests\Api\V1\Medical\MedicalLog\MedicalLogStoreRequest;
+use App\Http\Resources\Api\V1\Medical\MedicalLogResource;
+use App\Http\Resources\PaginationResource;
 use App\Models\MedicalLog;
-use Request;
+use Illuminate\Support\Facades\Response;
 
 class MedicalLogController extends Controller
 {
     public function index(MedicalLogIndexRequest $request)
     {
-        return $request->user()
-            ->injectionLogs()
-            ->latest()
-            ->get();
+        return Response::success(
+            data: new PaginationResource(
+                MedicalLogResource::collection(
+                    $request->user()
+                        ->medical_logs()
+                        ->latest()
+                        ->paginate()
+                )
+            )
+        );
     }
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'amount' => 'required|numeric',
-            'type' => 'nullable|string',
-            'logged_at' => 'required|date',
-            'note' => 'nullable',
-        ]);
 
-        return MedicalLog::query()->create([
-            'user_id' => $request->user()->id,
-            ...$validated,
-        ]);
+    public function store(MedicalLogStoreRequest $request)
+    {
+        return Response::store(
+            new MedicalLogResource(
+                MedicalLog::query()->create([
+                    'user_id' => $request->user()->id,
+                    ...$request->validated(),
+                ])
+            )
+        );
     }
 }
