@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Api\V1\Medical;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Medical\MedicalLog\MedicalLogIndexRequest;
 use App\Models\MedicalLog;
 use Request;
 
 class MedicalLogController extends Controller
 {
-    public function index(Request $request)
+    public function index(MedicalLogIndexRequest $request)
     {
         return $request->user()
             ->injectionLogs()
