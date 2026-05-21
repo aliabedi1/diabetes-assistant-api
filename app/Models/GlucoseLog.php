@@ -7,45 +7,47 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class GlucoseLog
- * 
- * @property int $id
- * @property int $user_id
- * @property float $glucose_amount
- * @property Carbon $logged_at
+ *
+ * @property int         $id
+ * @property int         $user_id
+ * @property float       $glucose_amount
+ * @property Carbon      $logged_at
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $deleted_at
- * 
- * @property User $user
+ *
+ * @property User        $user
  *
  * @package App\Models
  */
 class GlucoseLog extends BaseModel
 {
-	use SoftDeletes;
-	protected $table = 'glucose_logs';
+    use SoftDeletes;
 
-	protected $casts = [
-		'user_id' => 'int',
-		'glucose_amount' => 'float',
-		'logged_at' => 'datetime'
-	];
+    protected $table = 'glucose_logs';
 
-	protected $fillable = [
-		'user_id',
-		'glucose_amount',
-		'logged_at',
-		'note'
-	];
+    protected $casts = [
+        'user_id'        => 'int',
+        'glucose_amount' => 'float',
+        'logged_at'      => 'datetime'
+    ];
 
-	public function user()
-	{
-		return $this->belongsTo(User::class);
-	}
+    protected $fillable = [
+        'user_id',
+        'glucose_amount',
+        'logged_at',
+        'note'
+    ];
+
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -7,46 +7,49 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class UserRole
- * 
- * @property int $id
- * @property int $user_id
- * @property int $role_id
+ *
+ * @property int         $id
+ * @property int         $user_id
+ * @property int         $role_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $deleted_at
- * 
- * @property Role $role
- * @property User $user
+ *
+ * @property Role        $role
+ * @property User        $user
  *
  * @package App\Models
  */
 class UserRole extends BaseModel
 {
-	use SoftDeletes;
-	protected $table = 'user_roles';
+    use SoftDeletes;
 
-	protected $casts = [
-		'user_id' => 'int',
-		'role_id' => 'int'
-	];
+    protected $table = 'user_roles';
 
-	protected $fillable = [
-		'user_id',
-		'role_id'
-	];
+    protected $casts = [
+        'user_id' => 'int',
+        'role_id' => 'int'
+    ];
 
-	public function role()
-	{
-		return $this->belongsTo(Role::class);
-	}
+    protected $fillable = [
+        'user_id',
+        'role_id'
+    ];
 
-	public function user()
-	{
-		return $this->belongsTo(User::class);
-	}
+
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

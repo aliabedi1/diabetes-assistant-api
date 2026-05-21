@@ -9,6 +9,8 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -63,19 +65,19 @@ class User extends Authenticatable
     ];
 
 
-    public function glucose_logs()
+    public function glucose_logs(): HasMany
     {
         return $this->hasMany(GlucoseLog::class);
     }
 
 
-    public function medical_logs()
+    public function medical_logs(): HasMany
     {
         return $this->hasMany(MedicalLog::class);
     }
 
 
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'user_roles')
             ->withPivot('id', 'deleted_at')
