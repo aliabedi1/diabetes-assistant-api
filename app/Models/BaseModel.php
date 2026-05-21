@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BaseModel extends BaseModel
+class BaseModel extends Model
 {
     /**
      * Default pagination count.
@@ -16,6 +16,7 @@ class BaseModel extends BaseModel
      */
     protected static int $maxPerPage = 100;
 
+
     /**
      * Get dynamic per page from request.
      */
@@ -23,11 +24,11 @@ class BaseModel extends BaseModel
     {
         $perPage = request()->get('per_page');
 
-        if (!is_numeric($perPage)) {
+        if ( ! is_numeric($perPage)) {
             return static::$defaultPerPage;
         }
 
-        $perPage = (int) $perPage;
+        $perPage = (int)$perPage;
 
         if ($perPage <= 0) {
             return static::$defaultPerPage;
