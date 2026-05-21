@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\Glucose\GlucoseLogController;
-use App\Http\Controllers\Api\V1\Injection\InjectionLogController;
+use App\Http\Controllers\Api\V1\Injection\MedicalLogController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -34,10 +34,10 @@ Route::group([
         });
     });
 
-    $router->group(['as' => 'injection.', 'prefix' => 'injection'], function ($router) {
+    $router->group(['as' => 'medical.', 'prefix' => 'medical'], function ($router) {
         $router->group(['as' => 'logs.', 'prefix' => 'logs'], function ($router) {
-            $router->get('/', [InjectionLogController::class, 'index'])->name('index');
-            $router->post('/', [InjectionLogController::class, 'store'])->name('store');
+            $router->get('/', [MedicalLogController::class, 'index'])->name('index');
+            $router->post('/', [MedicalLogController::class, 'store'])->name('store');
         });
     });
 });
