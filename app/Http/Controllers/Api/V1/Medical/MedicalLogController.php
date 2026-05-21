@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Injection;
+namespace App\Http\Controllers\Api\V1\Medical;
 
 use App\Http\Controllers\Controller;
+use App\Models\MedicalLog;
 use Request;
 
 class MedicalLogController extends Controller
@@ -24,7 +25,7 @@ class MedicalLogController extends Controller
             'note' => 'nullable',
         ]);
 
-        return InjectionLog::create([
+        return MedicalLog::query()->create([
             'user_id' => $request->user()->id,
             ...$validated,
         ]);

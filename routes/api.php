@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\Glucose\GlucoseLogController;
-use App\Http\Controllers\Api\V1\Injection\MedicalLogController;
+use App\Http\Controllers\Api\V1\Medical\MedicalLogController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
