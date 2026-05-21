@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\V1\Glucose;
+namespace App\Http\Requests\Api\V1\Glucose\GlucoseLog;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class GlucoseLogStoreRequest extends FormRequest
+class GlucoseLogIndexRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,7 @@ class GlucoseLogStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'glucose_amount' => 'required|numeric',
-            'logged_at'      => 'required|date',
-            'note'           => 'nullable',
+            //
         ];
     }
 }

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\V1\Glucose;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\Glucose\GlucoseLogIndexRequest;
-use App\Http\Requests\Api\V1\Glucose\GlucoseLogStoreRequest;
+use App\Http\Requests\Api\V1\Glucose\GlucoseLog\GlucoseLogIndexRequest;
+use App\Http\Requests\Api\V1\Glucose\GlucoseLog\GlucoseLogStoreRequest;
 use App\Http\Resources\Api\V1\Glucose\GlucoseLogResource;
 use App\Http\Resources\PaginationResource;
 use App\Models\GlucoseLog;
