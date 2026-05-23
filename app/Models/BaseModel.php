@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Container\EntryNotFoundException;
+use Illuminate\Contracts\Container\CircularDependencyException;
 use Illuminate\Database\Eloquent\Model;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class BaseModel extends Model
 {
@@ -19,6 +23,12 @@ class BaseModel extends Model
 
     /**
      * Get dynamic per page from request.
+     *
+     * @return int
+     * @throws EntryNotFoundException
+     * @throws CircularDependencyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getPerPage(): int
     {
