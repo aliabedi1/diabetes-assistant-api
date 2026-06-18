@@ -15,6 +15,6 @@ class DebugCommand extends Command
      */
     public function handle()
     {
-        dd(bcrypt('Ali@bedi0181'));
+
     }
 }
