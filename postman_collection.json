@@ -1,0 +1,342 @@
+{
+  "info": {
+    "name": "Diabetes Assistant API",
+    "description": "Complete API collection for diabetes-assistant-api (Laravel + Sanctum). Includes auth, glucose logs, and medical logs endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000/api", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "username", "value": "testuser", "type": "string" },
+    { "key": "name", "value": "Test", "type": "string" },
+    { "key": "last_name", "value": "User", "type": "string" },
+    { "key": "email", "value": "test@example.com", "type": "string" },
+    { "key": "password", "value": "secret123", "type": "string" },
+    { "key": "login", "value": "test@example.com", "type": "string" },
+    { "key": "per_page", "value": "15", "type": "string" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{token}}", "type": "string" }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"name\": \"{{name}}\",\n  \"last_name\": \"{{last_name}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new user and receive auth token."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"code\": 1,\n  \"message\": \"It was created successfully.\",\n  \"data\": {\n    \"user\": {\n      \"id\": 1,\n      \"username\": \"testuser\",\n      \"name\": \"Test\",\n      \"last_name\": \"User\",\n      \"email\": \"test@example.com\"\n    },\n    \"token\": \"1|sanctum_token_here\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"{{login}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login using email or username in the `login` field."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"code\": 1,\n  \"message\": null,\n  \"data\": {\n    \"user\": {\n      \"id\": 1,\n      \"username\": \"testuser\",\n      \"email\": \"test@example.com\"\n    },\n    \"token\": \"1|sanctum_token_here\"\n  }\n}"
+            },
+            {
+              "name": "422 Invalid Credentials",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"login\": [\"Invalid credentials\"]\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json?.data?.token) {",
+                  "  pm.collectionVariables.set('token', json.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Get currently authenticated user profile and roles."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"code\": 1,\n  \"message\": null,\n  \"data\": {\n    \"username\": \"testuser\",\n    \"name\": \"Test\",\n    \"last_name\": \"User\",\n    \"email\": \"test@example.com\",\n    \"roles\": [\n      { \"name\": \"User\", \"slug\": \"user\" }\n    ]\n  }\n}"
+            },
+            {
+              "name": "401 Unauthorized",
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
+            },
+            "description": "Revoke all current user Sanctum tokens."
+          },
+          "response": [
+            {
+              "name": "202 Accepted",
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"code\": 1,\n  \"message\": \"Logged out successfully\",\n  \"data\": []\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.unset('token');"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Glucose",
+      "item": [
+        {
+          "name": "List Glucose Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/glucose/logs?per_page={{per_page}}",
+              "host": ["{{base_url}}"],
+              "path": ["glucose", "logs"],
+              "query": [
+                { "key": "per_page", "value": "{{per_page}}", "description": "Optional page size (max 100 by model logic)." }
+              ]
+            },
+            "description": "Paginated glucose logs for authenticated user (latest first)."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"code\": 1,\n  \"message\": null,\n  \"data\": {\n    \"items\": [\n      {\n        \"glucose_amount\": 112.5,\n        \"logged_at\": \"2026-06-10T08:00:00.000000Z\",\n        \"note\": \"Fasting\",\n        \"created_at\": \"2026-06-10T08:01:00.000000Z\",\n        \"updated_at\": \"2026-06-10T08:01:00.000000Z\"\n      }\n    ],\n    \"pagination\": {\n      \"current_page\": 1,\n      \"from\": 1,\n      \"last_page\": 1,\n      \"per_page\": 15,\n      \"to\": 1,\n      \"total\": 1\n    },\n    \"links\": {\n      \"first\": \"http://127.0.0.1:8000/api/glucose/logs?page=1\",\n      \"last\": \"http://127.0.0.1:8000/api/glucose/logs?page=1\",\n      \"prev\": null,\n      \"next\": null\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Glucose Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"glucose_amount\": 118.4,\n  \"logged_at\": \"2026-06-10 08:30:00\",\n  \"note\": \"After breakfast\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/glucose/logs",
+              "host": ["{{base_url}}"],
+              "path": ["glucose", "logs"]
+            },
+            "description": "Create a glucose log for authenticated user."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"code\": 1,\n  \"message\": \"It was created successfully.\",\n  \"data\": {\n    \"glucose_amount\": 118.4,\n    \"logged_at\": \"2026-06-10T08:30:00.000000Z\",\n    \"note\": \"After breakfast\",\n    \"created_at\": \"2026-06-10T08:31:00.000000Z\",\n    \"updated_at\": \"2026-06-10T08:31:00.000000Z\"\n  }\n}"
+            },
+            {
+              "name": "422 Validation Error",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"glucose_amount\": [\"The glucose amount field is required.\"]\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Medical",
+      "item": [
+        {
+          "name": "List Medical Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/medical/logs?per_page={{per_page}}",
+              "host": ["{{base_url}}"],
+              "path": ["medical", "logs"],
+              "query": [
+                { "key": "per_page", "value": "{{per_page}}", "description": "Optional page size (max 100 by model logic)." }
+              ]
+            },
+            "description": "Paginated medical logs for authenticated user (latest first)."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"code\": 1,\n  \"message\": null,\n  \"data\": {\n    \"items\": [\n      {\n        \"amount\": 8.0,\n        \"type\": \"insulin\",\n        \"logged_at\": \"2026-06-10T09:00:00.000000Z\",\n        \"note\": \"Morning dose\",\n        \"created_at\": \"2026-06-10T09:01:00.000000Z\",\n        \"updated_at\": \"2026-06-10T09:01:00.000000Z\"\n      }\n    ],\n    \"pagination\": {\n      \"current_page\": 1,\n      \"from\": 1,\n      \"last_page\": 1,\n      \"per_page\": 15,\n      \"to\": 1,\n      \"total\": 1\n    },\n    \"links\": {\n      \"first\": \"http://127.0.0.1:8000/api/medical/logs?page=1\",\n      \"last\": \"http://127.0.0.1:8000/api/medical/logs?page=1\",\n      \"prev\": null,\n      \"next\": null\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Medical Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 8.5,\n  \"type\": \"insulin\",\n  \"logged_at\": \"2026-06-10 09:45:00\",\n  \"note\": \"Post meal correction\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/medical/logs",
+              "host": ["{{base_url}}"],
+              "path": ["medical", "logs"]
+            },
+            "description": "Create a medical log for authenticated user."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"code\": 1,\n  \"message\": \"It was created successfully.\",\n  \"data\": {\n    \"amount\": 8.5,\n    \"type\": \"insulin\",\n    \"logged_at\": \"2026-06-10T09:45:00.000000Z\",\n    \"note\": \"Post meal correction\",\n    \"created_at\": \"2026-06-10T09:46:00.000000Z\",\n    \"updated_at\": \"2026-06-10T09:46:00.000000Z\"\n  }\n}"
+            },
+            {
+              "name": "422 Validation Error",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"amount\": [\"The amount field is required.\"]\n  }\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

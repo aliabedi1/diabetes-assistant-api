@@ -23,7 +23,7 @@ class ResponseMacroProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerResponseMacros();
     }
 
 
@@ -46,9 +46,9 @@ class ResponseMacroProvider extends ServiceProvider
         Response::macro(
             'store',
             fn($data = [], $message = null) => Response::success(
+                $data,
                 SystemMessage::SUCCESS,
                 $message ?? __("It was created successfully."),
-                $data,
                 HttpFoundation::HTTP_CREATED
             )
         );
@@ -56,9 +56,9 @@ class ResponseMacroProvider extends ServiceProvider
         Response::macro(
             'update',
             fn($data = [], $message = null) => Response::success(
+                $data,
                 SystemMessage::SUCCESS,
                 $message ?? __("Successfully updated."),
-                $data,
                 HttpFoundation::HTTP_ACCEPTED
             )
         );
@@ -66,9 +66,9 @@ class ResponseMacroProvider extends ServiceProvider
         Response::macro(
             'destroy',
             fn($message = null) => Response::success(
+                [],
                 SystemMessage::SUCCESS,
                 $message ?? __('Removed successfully.'),
-                [],
                 HttpFoundation::HTTP_ACCEPTED
             )
         );

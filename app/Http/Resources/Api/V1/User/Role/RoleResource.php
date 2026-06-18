@@ -22,7 +22,7 @@ class RoleResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 
-            'users' => UserResource::collection($this->whenLoaded('user')),
+            'users' => UserResource::collection($this->whenLoaded('users')),
 
         ];
     }

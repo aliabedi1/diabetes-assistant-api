@@ -19,7 +19,9 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request)
     {
-        $user = User::query()->create($request->validated());
+        $user = User::query()->create(array_merge($request->validated(),[
+            'password' => bcrypt($request->input('password')),
+        ]));
 
         $role = Role::query()
             ->where('slug', 'user')
@@ -32,7 +34,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return Response::store(
-            AuthResource::make([
+            new AuthResource((object)[
                 'user'  => $user,
                 'token' => $token,
             ])

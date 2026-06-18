@@ -31,12 +31,4 @@ class RegisterRequest extends FormRequest
             'password'  => 'required|min:6',
         ];
     }
-
-
-    protected function passedValidation()
-    {
-        $this->merge([
-            'password' => bcrypt($this->input('password')),
-        ]);
-    }
 }
