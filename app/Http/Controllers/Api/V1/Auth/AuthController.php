@@ -56,7 +56,7 @@ class AuthController extends Controller
         }
 
         return Response::success(
-            AuthResource::make([
+            AuthResource::make((object)[
                 'user'  => $user,
                 'token' => $user->createToken('auth_token')->plainTextToken,
             ])
