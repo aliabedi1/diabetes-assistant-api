@@ -17,20 +17,22 @@ class GlucoseLogController extends Controller
     {
         $userId = $request->user()->id;
 
-        $paginator = Cache::remember(
+        $data = Cache::remember(
             "logs:user:{$userId}",
             now()->addHour(),
-            fn () => $request->user()
-                ->glucose_logs()
-                ->latest('logged_at')
-                ->paginate()
+            function () use ($request) {
+                $paginator = $request->user()
+                    ->glucose_logs()
+                    ->latest('logged_at')
+                    ->paginate();
+
+                return (new PaginationResource(
+                    GlucoseLogResource::collection($paginator)
+                ))->toArray($request);
+            }
         );
 
-        return Response::success(
-            data: new PaginationResource(
-                GlucoseLogResource::collection($paginator)
-            )
-        );
+        return Response::success(data: $data);
     }
 
 
