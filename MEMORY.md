@@ -232,6 +232,9 @@ All list endpoints support `?per_page=N` (default 15, max 100).
 - **Migration naming mismatch**: the migration file `create_injection_logs_table.php` actually creates the `medical_logs` table. The file was renamed mid-development. This is a known inconsistency — do not rename the migration file.
 - **Schema::defaultStringLength(191)**: set in `AppServiceProvider` for MySQL utf8mb4 compatibility.
 - **Frontend URL config**: `config('app.frontend_url')` is used for password reset links.
+- **Relationship naming**: User model defines relationships in snake_case (`glucose_logs()`, `medical_logs()`). Always call them as `->glucose_logs()` in code — not camelCase. Laravel's magic property access (`$user->glucoseLogs`) works, but direct method calls must match the defined name.
+- **Glucose logs cache**: `GET /glucose/logs` caches the paginator per user under key `logs:user:{id}` with a 1-hour TTL. The cache is busted immediately on `POST /glucose/logs`. Do not add `latest()` on `created_at` — sort by `logged_at` so user-supplied timestamps drive chart order.
+- **No dedicated `/logs` endpoint**: the frontend chart uses `GET /glucose/logs` directly (via `getGlucoseLogs()` service). There is no separate `/logs` route and none is needed — chart filtering is done client-side from the paginated response.
 
 ---
 
