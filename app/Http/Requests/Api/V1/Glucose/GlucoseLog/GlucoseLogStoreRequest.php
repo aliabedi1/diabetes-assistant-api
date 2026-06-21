@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Api\V1\Glucose\GlucoseLog;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class GlucoseLogStoreRequest extends FormRequest
@@ -13,18 +12,6 @@ class GlucoseLogStoreRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
-    protected function prepareForValidation(): void
-    {
-        if (! $this->filled('logged_at')) {
-            $this->merge(['logged_at' => now()]);
-        }
     }
 
     public function rules(): array

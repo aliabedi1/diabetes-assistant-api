@@ -39,7 +39,9 @@ class GlucoseLogController extends Controller
     {
         $log = GlucoseLog::query()->create([
             'user_id' => $request->user()->id,
-            ...$request->validated(),
+            'glucose_amount' => $request->validated('glucose_amount'),
+            'logged_at' => $request->validated('logged_at') ?? now(),
+            'note' => $request->validated('note'),
         ]);
 
         Cache::forget("logs:user:{$request->user()->id}");
