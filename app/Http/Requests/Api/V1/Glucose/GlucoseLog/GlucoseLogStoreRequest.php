@@ -31,7 +31,7 @@ class GlucoseLogStoreRequest extends FormRequest
     {
         return [
             'glucose_amount' => 'required|numeric|min:1|max:1500',
-            'logged_at' => 'required|date',
+            'logged_at' => 'nullable|date',
             'note' => 'nullable',
         ];
     }
