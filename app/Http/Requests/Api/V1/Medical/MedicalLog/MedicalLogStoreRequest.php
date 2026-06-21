@@ -2,31 +2,54 @@
 
 namespace App\Http\Requests\Api\V1\Medical\MedicalLog;
 
-use Illuminate\Contracts\Validation\ValidationRule;
+use App\Models\Medicine;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MedicalLogStoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('medicine_name')) {
+            $this->merge(['medicine_name' => trim($this->input('medicine_name', ''))]);
+        }
+
+        if (! $this->filled('logged_at')) {
+            $this->merge(['logged_at' => now()]);
+        }
+    }
+
     public function rules(): array
     {
         return [
-            'amount'    => 'required|numeric',
-            'type'      => 'nullable|string',
-            'logged_at' => 'required|date',
-            'note'      => 'nullable',
+            'medicine_id' => 'nullable|integer|exists:medicines,id',
+            'medicine_name' => 'required_without:medicine_id|nullable|string|max:255',
+            'amount' => 'required|numeric',
+            'logged_at' => 'nullable|date',
+            'note' => 'nullable|string',
         ];
+    }
+
+    public function withValidator($validator): void
+    {
+        if (! $this->filled('medicine_id')) {
+            return;
+        }
+
+        $validator->after(function ($validator) {
+            $medicine = Medicine::find((int) $this->medicine_id);
+
+            if (! $medicine) {
+                return;
+            }
+
+            if (! $medicine->is_global && $medicine->user_id !== $this->user()->id) {
+                $validator->errors()->add('medicine_id', __('The selected medicine does not belong to you.'));
+            }
+        });
     }
 }

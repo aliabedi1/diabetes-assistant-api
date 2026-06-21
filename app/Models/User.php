@@ -18,40 +18,38 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  * Class User
  *
- * @property int                     $id
- * @property string                  $username
- * @property string                  $name
- * @property string                  $last_name
- * @property string                  $email
- * @property Carbon|null             $email_verified_at
- * @property string                  $password
- * @property string|null             $remember_token
- * @property Carbon|null             $created_at
- * @property Carbon|null             $updated_at
- * @property string|null             $deleted_at
- *
+ * @property int $id
+ * @property string $username
+ * @property string $name
+ * @property string $last_name
+ * @property string $email
+ * @property Carbon|null $email_verified_at
+ * @property string $password
+ * @property string|null $remember_token
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string|null $deleted_at
  * @property Collection|GlucoseLog[] $glucose_logs
  * @property Collection|MedicalLog[] $medical_logs
- * @property Collection|Role[]       $roles
- *
- * @package App\Models
+ * @property Collection|Medicine[] $medicines
+ * @property Collection|Role[] $roles
  */
 class User extends Authenticatable
 {
-    use SoftDeletes;
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
+    use SoftDeletes;
 
     protected $table = 'users';
 
     protected $casts = [
-        'email_verified_at' => 'datetime'
+        'email_verified_at' => 'datetime',
     ];
 
     protected $hidden = [
         'password',
-        'remember_token'
+        'remember_token',
     ];
 
     protected $fillable = [
@@ -61,21 +59,23 @@ class User extends Authenticatable
         'email',
         'email_verified_at',
         'password',
-        'remember_token'
+        'remember_token',
     ];
-
 
     public function glucose_logs(): HasMany
     {
         return $this->hasMany(GlucoseLog::class);
     }
 
-
     public function medical_logs(): HasMany
     {
         return $this->hasMany(MedicalLog::class);
     }
 
+    public function medicines(): HasMany
+    {
+        return $this->hasMany(Medicine::class);
+    }
 
     public function roles(): BelongsToMany
     {

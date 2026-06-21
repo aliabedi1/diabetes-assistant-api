@@ -181,6 +181,20 @@ routes/
 | note | text | nullable |
 | timestamps + softDeletes | | |
 
+### `medicines`
+| Column | Type | Notes |
+|---|---|---|
+| id | bigint PK | |
+| user_id | FK → users | nullable; null = global medicine |
+| name_en | string | |
+| name_fa | string | nullable; Persian label |
+| is_global | boolean | default false |
+| timestamps + softDeletes | | |
+| UNIQUE | (user_id, name_en) | case-insensitive via MySQL collation |
+
+### `medical_logs` (updated)
+Added `medicine_id` (nullable FK → medicines.id, RESTRICT on delete). Old `type` column kept for backward compatibility.
+
 ### `personal_access_tokens`
 Standard Sanctum table.
 
@@ -205,6 +219,11 @@ Base URL: `http://localhost:8000/api`
 | POST | `/glucose/logs` | `GlucoseLogController@store` |
 | GET | `/medical/logs` | `MedicalLogController@index` |
 | POST | `/medical/logs` | `MedicalLogController@store` |
+| GET | `/medicines` | `MedicineController@index` |
+| POST | `/medicines` | `MedicineController@store` |
+| GET | `/medicines/recent` | `MedicineController@recent` |
+| PUT | `/medicines/{medicine}` | `MedicineController@update` |
+| DELETE | `/medicines/{medicine}` | `MedicineController@destroy` |
 
 ### Pagination Query Param
 All list endpoints support `?per_page=N` (default 15, max 100).
@@ -219,7 +238,10 @@ All list endpoints support `?per_page=N` (default 15, max 100).
 4. **Data scoping**: all logs are scoped to `$request->user()` — no cross-user access.
 5. **Soft deletes**: all domain entities use soft deletes; nothing is hard-deleted.
 6. **Pagination**: `BaseModel::getPerPage()` reads `?per_page` from request, enforces max 100.
-7. **Medical log type**: free-form nullable string — no enum enforced at DB/model level (yet).
+7. **Medical log type**: free-form nullable string kept for backward compatibility; new logs use `medicine_id` instead.
+8. **Medicine ownership**: `user_id = null` means global/platform medicine (`is_global = true`). User-created medicines have `user_id` set. Global medicines are visible to all users but cannot be edited or deleted via API.
+9. **Medicine log store**: if both `medicine_id` and `medicine_name` are sent, `medicine_id` wins. If only `medicine_name` is sent, a user-owned medicine is found-or-created (case-insensitive lookup via `LOWER(name_en)`).
+10. **Medicine delete**: blocked at app level (422) if any `medical_logs` reference the medicine. FK is `RESTRICT` as a DB-level safety net.
 
 ---
 
