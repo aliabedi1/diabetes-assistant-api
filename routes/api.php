@@ -32,6 +32,7 @@ Route::group([
             $router->get('/', [GlucoseLogController::class, 'index'])->name('index');
             $router->post('/', [GlucoseLogController::class, 'store'])->name('store');
         });
+        $router->get('/chart', [GlucoseLogController::class, 'chart'])->name('chart');
     });
 
     $router->group(['as' => 'medical.', 'prefix' => 'medical'], function ($router) {

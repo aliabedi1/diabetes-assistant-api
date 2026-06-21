@@ -30,6 +30,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon|null $updated_at
  * @property string|null $deleted_at
  * @property Collection|GlucoseLog[] $glucose_logs
+ * @property Collection|GlucoseLogMonthly[] $glucose_log_monthly
+ * @property Collection|GlucoseLogYearly[] $glucose_log_yearly
  * @property Collection|MedicalLog[] $medical_logs
  * @property Collection|Medicine[] $medicines
  * @property Collection|Role[] $roles
@@ -65,6 +67,16 @@ class User extends Authenticatable
     public function glucose_logs(): HasMany
     {
         return $this->hasMany(GlucoseLog::class);
+    }
+
+    public function glucose_log_monthly(): HasMany
+    {
+        return $this->hasMany(GlucoseLogMonthly::class);
+    }
+
+    public function glucose_log_yearly(): HasMany
+    {
+        return $this->hasMany(GlucoseLogYearly::class);
     }
 
     public function medical_logs(): HasMany
