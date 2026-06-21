@@ -233,7 +233,8 @@ All list endpoints support `?per_page=N` (default 15, max 100).
 - **Schema::defaultStringLength(191)**: set in `AppServiceProvider` for MySQL utf8mb4 compatibility.
 - **Frontend URL config**: `config('app.frontend_url')` is used for password reset links.
 - **Relationship naming**: User model defines relationships in snake_case (`glucose_logs()`, `medical_logs()`). Always call them as `->glucose_logs()` in code — not camelCase. Laravel's magic property access (`$user->glucoseLogs`) works, but direct method calls must match the defined name.
-- **Glucose logs cache**: `GET /glucose/logs` caches the paginator per user under key `logs:user:{id}` with a 1-hour TTL. The cache is busted immediately on `POST /glucose/logs`. Do not add `latest()` on `created_at` — sort by `logged_at` so user-supplied timestamps drive chart order.
+- **Glucose logs cache**: `GET /glucose/logs` caches the paginator per user under key `logs:user:{id}` with a 24-hour TTL. The cache is busted immediately on `POST /glucose/logs`. Sort by `logged_at` ASC (`orderBy('logged_at')`) so chronological order drives chart display. Do not use `latest()` or sort by `created_at`.
+- **`logged_at` default**: if the client omits `logged_at` on `POST /glucose/logs`, `prepareForValidation()` fills it with `now()` before the `required|date` rule runs.
 - **No dedicated `/logs` endpoint**: the frontend chart uses `GET /glucose/logs` directly (via `getGlucoseLogs()` service). There is no separate `/logs` route and none is needed — chart filtering is done client-side from the paginated response.
 
 ---

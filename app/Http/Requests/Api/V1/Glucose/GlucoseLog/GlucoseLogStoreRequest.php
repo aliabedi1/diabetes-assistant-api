@@ -20,12 +20,19 @@ class GlucoseLogStoreRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('logged_at')) {
+            $this->merge(['logged_at' => now()]);
+        }
+    }
+
     public function rules(): array
     {
         return [
-            'glucose_amount' => 'required|numeric',
-            'logged_at'      => 'required|date',
-            'note'           => 'nullable',
+            'glucose_amount' => 'required|numeric|min:1|max:1500',
+            'logged_at' => 'required|date',
+            'note' => 'nullable',
         ];
     }
 }

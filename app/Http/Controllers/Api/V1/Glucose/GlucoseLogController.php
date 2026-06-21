@@ -19,11 +19,11 @@ class GlucoseLogController extends Controller
 
         $data = Cache::remember(
             "logs:user:{$userId}",
-            now()->addHour(),
+            now()->addDay(),
             function () use ($request) {
                 $paginator = $request->user()
                     ->glucose_logs()
-                    ->latest('logged_at')
+                    ->orderBy('logged_at')
                     ->paginate();
 
                 return (new PaginationResource(
@@ -34,7 +34,6 @@ class GlucoseLogController extends Controller
 
         return Response::success(data: $data);
     }
-
 
     public function store(GlucoseLogStoreRequest $request)
     {

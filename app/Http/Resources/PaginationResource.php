@@ -19,7 +19,7 @@ class PaginationResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'items'      => $this->collection,
+            'items'      => $this->collection->map(fn ($item) => $item->toArray($request))->values()->all(),
             'pagination' => [
                 'current_page' => $this->rawResource->currentPage(),
                 'from'         => $this->rawResource->firstItem(),
